@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1490561437 source:c:\users\dems\documents\cppprojects\bancodedados\bancodedados\main.cpp
+	"iostream"
+	"cstdlib"
+	"math.h"
+	<stdlib.h>
+	<stdio.h>
+
+1490565129 source:c:\users\dems\documents\cppprojects\bancodedados\main.cpp
+	"iostream"
+	"cstdlib"
+	"math.h"
+	<stdlib.h>
+	<stdio.h>
+	<conio.h>
+
