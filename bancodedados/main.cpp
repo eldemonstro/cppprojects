@@ -159,7 +159,7 @@ char tela ()
     cout << "\n4 - Ordernar por nome *não implementado*";
     cout << "\n5 - Busca por idade (sequencial)";
     cout << "\n6 - Busca por idade (binaria) (executa ordenar por idade) *não implementado*";
-    cout << "\n7 - Busca por nome";
+    cout << "\n7 - Busca por nome *não implementado*";
     cout << "\n8 - Limpar Banco";
     cout << "\n9 - Inserir pessoas pré definidas (executa limpar banco)";
     cout << "\nEsc - Sair";
