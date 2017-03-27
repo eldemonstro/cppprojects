@@ -4,7 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
-#define tam 15
+#include <string>
+#define tam 100
 
 using namespace std;
 
@@ -262,15 +263,66 @@ int buscaIdadeBinario()
     return 0;
 }
 
+bool contemString(string str, string pesquisa)
+{
+    int tamanhoStr = str.length();
+    int tamanhoPesquisa = pesquisa.length();
+    string tempStr = str;
+    string tempPesquisa = pesquisa;
+    if (str == pesquisa)
+    {
+        return true;
+    }
+    if (tamanhoStr > tamanhoPesquisa)
+    {
+        tamanhoStr = tamanhoPesquisa;
+        tempStr = str.substr(0, tamanhoStr);
+        if (tempStr != pesquisa)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < (tamanhoPesquisa - tamanhoStr); i++)
+        {
+            tempPesquisa = pesquisa.substr(i, tamanhoStr);
+            if (tempPesquisa == str)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
+}
+
 int buscaNome()
 {
     system("cls");
+    cout << "Alguns valores podem ser aproximados" << endl;
     string nome = "";
     nome = pegarNome();
     bool encontrado = false;
-    for (int i = 0; i < lastPos + 1; i++)
+    for (int i = 0; i < (lastPos >= (tam - 1) ? tam : (lastPos + 1)); i++)
     {
-
+        if (contemString(nome, bancoDeDados[i].nome))
+        {
+            if (!encontrado)
+            {
+                cout << "Pessoa(s) encontrada(s) na(s) posição(ões): " << endl;
+                encontrado = true;
+            }
+            cout << "Posição: " << i << endl;
+            cout << "Nome: " << bancoDeDados[i].nome << endl;
+            cout << "Idade: " << bancoDeDados[i].idade << endl;
+            cout << "Id: " << bancoDeDados[i].id << endl;
+            cout << "-------" << endl;
+        }
     }
     if (!encontrado)
     {
@@ -291,9 +343,9 @@ int limparLista()
 
 int inserirPessoaAuto()
 {
-    lastPos = 4;
-    string nomes[] = {"Gizs", "Yoz", "Multax", "Klovkx", "Induvente"};
-    int idades[] = {15, 3, 69, 45, 99};
+    lastPos = 9;
+    string nomes[] = {"Gizs", "Yoz", "Multax", "Klovkx", "Induvente", "Mantrz", "Wyxxyz", "Zaac", "Halesh", "Sahah"};
+    int idades[] = {15, 3, 69, 45, 99, 47, 52, 37, 48, 14};
     for (int i = 0; i < (lastPos + 1); i++)
     {
         bancoDeDados[i].nome = nomes[i];
@@ -315,7 +367,7 @@ char tela ()
     cout << "\n5 - Ordenar por ID";
     cout << "\n6 - Busca por idade (sequencial)";
     cout << "\n7 - Busca por idade (binaria) (executa ordenar por idade)";
-    cout << "\n8 - Busca por nome *não implementado*";
+    cout << "\n8 - Busca por nome";
     cout << "\n9 - Limpar Banco";
     cout << "\n0 - Inserir pessoas pré definidas (executa limpar banco)";
     cout << "\nEsc - Sair";
