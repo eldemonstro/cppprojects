@@ -90,10 +90,91 @@ int ordenarIdade()
         }
     }
     while (trocando == true);
-    cout << "Banco ordenado com sucesso" << endl;
+    cout << "Banco ordenado por idade com sucesso" << endl;
     system("pause");
     return 0;
 }
+
+bool ordenarNomeApoio(int i)
+{
+    int nomeCharSize1 = 0;
+    int nomeCharSize2 = 0;
+    bool trocando;
+    struct pessoa tempPessoa;
+    nomeCharSize1 = sizeof(bancoDeDados[i].nome)/sizeof(bancoDeDados[i].nome[0]);
+    nomeCharSize2 = sizeof(bancoDeDados[i + 1].nome)/sizeof(bancoDeDados[i + 1].nome[0]);
+    if (nomeCharSize1 >= nomeCharSize2)
+    {
+        for (int j = 0; j < nomeCharSize2; j++)
+        {
+            if (bancoDeDados[i].nome[j] > bancoDeDados[i + 1].nome[j])
+            {
+                trocando = true;
+                tempPessoa = bancoDeDados[i];
+                bancoDeDados[i] = bancoDeDados[i + 1];
+                bancoDeDados[i + 1] = tempPessoa;
+            }
+        }
+    }
+    else
+    {
+        for (int j = 0; j < nomeCharSize1; j++)
+        {
+            if (bancoDeDados[i].nome[j] > bancoDeDados[i + 1].nome[j])
+            {
+                trocando = true;
+                tempPessoa = bancoDeDados[i];
+                bancoDeDados[i] = bancoDeDados[i + 1];
+                bancoDeDados[i + 1] = tempPessoa;
+            }
+        }
+    }
+    return trocando;
+}
+
+int ordenarNome()
+{
+    system("cls");
+    bool trocando = false;
+    pessoa tempPessoa;
+    do
+    {
+        trocando = false;
+        for (int i = 0; i < lastPos; i++)
+        {
+            if (bancoDeDados[i].nome[0] > bancoDeDados[i + 1].nome[0])
+            {
+                trocando = true;
+                tempPessoa = bancoDeDados[i];
+                bancoDeDados[i] = bancoDeDados[i + 1];
+                bancoDeDados[i + 1] = tempPessoa;
+            }
+            else if (bancoDeDados[i].nome[0] < bancoDeDados[i + 1].nome[0])
+            {
+                continue;
+            }
+            else if (bancoDeDados[i].nome == bancoDeDados[i+1].nome)
+            {
+                if (bancoDeDados[i].id > bancoDeDados[i + 1].id)
+                {
+                    trocando = true;
+                    tempPessoa = bancoDeDados[i];
+                    bancoDeDados[i] = bancoDeDados[i + 1];
+                    bancoDeDados[i + 1] = tempPessoa;
+                }
+            }
+            else
+            {
+                trocando = ordenarNomeApoio(i);
+            }
+        }
+    }
+    while (trocando == true);
+    cout << "Banco ordenado por nome com sucesso" << endl;
+    system("pause");
+    return 0;
+}
+
 
 int buscaIdadeSequencial()
 {
@@ -185,6 +266,9 @@ void menu()
             break;
         case '3':
             ordenarIdade();
+            break;
+        case '4':
+            ordenarNome();
             break;
         case '5':
             buscaIdadeSequencial();
