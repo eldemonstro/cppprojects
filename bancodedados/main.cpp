@@ -70,11 +70,18 @@ int mostrarBanco()
     return 0;
 }
 
+int trocar(int i, int prox)
+{
+    struct pessoa tempPessoa;
+    tempPessoa = bancoDeDados[i];
+    bancoDeDados[i] = bancoDeDados[prox];
+    bancoDeDados[prox] = tempPessoa;
+}
+
 int ordenarIdade()
 {
     system("cls");
     bool trocando = false;
-    pessoa tempPessoa;
     do
     {
         trocando = false;
@@ -83,9 +90,7 @@ int ordenarIdade()
             if (bancoDeDados[i].idade > bancoDeDados[i + 1].idade)
             {
                 trocando = true;
-                tempPessoa = bancoDeDados[i];
-                bancoDeDados[i] = bancoDeDados[i + 1];
-                bancoDeDados[i + 1] = tempPessoa;
+                trocar(i, i + 1);
             }
         }
     }
@@ -95,86 +100,15 @@ int ordenarIdade()
     return 0;
 }
 
-bool ordenarNomeApoio(int i)
-{
-    int nomeCharSize1 = 0;
-    int nomeCharSize2 = 0;
-    bool trocando;
-    struct pessoa tempPessoa;
-    nomeCharSize1 = sizeof(bancoDeDados[i].nome)/sizeof(bancoDeDados[i].nome[0]);
-    nomeCharSize2 = sizeof(bancoDeDados[i + 1].nome)/sizeof(bancoDeDados[i + 1].nome[0]);
-    if (nomeCharSize1 >= nomeCharSize2)
-    {
-        for (int j = 0; j < nomeCharSize2; j++)
-        {
-            if (bancoDeDados[i].nome[j] > bancoDeDados[i + 1].nome[j])
-            {
-                trocando = true;
-                tempPessoa = bancoDeDados[i];
-                bancoDeDados[i] = bancoDeDados[i + 1];
-                bancoDeDados[i + 1] = tempPessoa;
-            }
-        }
-    }
-    else
-    {
-        for (int j = 0; j < nomeCharSize1; j++)
-        {
-            if (bancoDeDados[i].nome[j] > bancoDeDados[i + 1].nome[j])
-            {
-                trocando = true;
-                tempPessoa = bancoDeDados[i];
-                bancoDeDados[i] = bancoDeDados[i + 1];
-                bancoDeDados[i + 1] = tempPessoa;
-            }
-        }
-    }
-    return trocando;
-}
-
 int ordenarNome()
 {
-    system("cls");
     bool trocando = false;
-    pessoa tempPessoa;
     do
     {
-        trocando = false;
-        for (int i = 0; i < lastPos; i++)
-        {
-            if (bancoDeDados[i].nome[0] > bancoDeDados[i + 1].nome[0])
-            {
-                trocando = true;
-                tempPessoa = bancoDeDados[i];
-                bancoDeDados[i] = bancoDeDados[i + 1];
-                bancoDeDados[i + 1] = tempPessoa;
-            }
-            else if (bancoDeDados[i].nome[0] < bancoDeDados[i + 1].nome[0])
-            {
-                continue;
-            }
-            else if (bancoDeDados[i].nome == bancoDeDados[i+1].nome)
-            {
-                if (bancoDeDados[i].id > bancoDeDados[i + 1].id)
-                {
-                    trocando = true;
-                    tempPessoa = bancoDeDados[i];
-                    bancoDeDados[i] = bancoDeDados[i + 1];
-                    bancoDeDados[i + 1] = tempPessoa;
-                }
-            }
-            else
-            {
-                trocando = ordenarNomeApoio(i);
-            }
-        }
-    }
-    while (trocando == true);
-    cout << "Banco ordenado por nome com sucesso" << endl;
-    system("pause");
-    return 0;
-}
 
+    }
+    while (trocando);
+}
 
 int buscaIdadeSequencial()
 {
