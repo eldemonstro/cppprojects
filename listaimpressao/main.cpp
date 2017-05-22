@@ -198,6 +198,6 @@ int main() {
   }
   t1.join();
   cout << "\033[2J\033[1;1H";
-  cout << "bye :>";
+  cout << "bye :>" << endl;
   return 0;
 }
