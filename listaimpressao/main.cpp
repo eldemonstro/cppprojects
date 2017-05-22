@@ -18,6 +18,9 @@
   enter, isso acontece por causa que o que está escrito na tela só se atualiza
   a cada 3 segundos e se tiver, caso aconteca aperte enter mais uma vez e
   aguarde.
+
+  Github:
+    https://github.com/eldemonstro/cppprojects/tree/master/listaimpressao
 */
 
 // Incluindo as bibliotecas necessarias
