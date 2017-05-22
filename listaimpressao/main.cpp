@@ -1,7 +1,9 @@
 /*
-  ATENÇÃO, ESSA DESGRAÇA USA THREAD, EU FIZ ISSO AQUI SÒ PRA ALIMENTAR MEU EGO
-  PRA COMPILAR ISSO DAQUI EU TIVE QUE USAR UBUNTU COM A ULTIMA VERSÃO DO GCC
-  INSTALADA, SE VOCÊ QUISER TENTAR VOCÊ PODE FAZER:
+  ATENÇÃO: O programa usa bibliotecas que foram trazidas na versao 11 do c++, e
+  foi codificado em um sistema operacional UBUNTU, se utilizando o terminal
+  normal, é possivel compilar no windows mas o resultado pode não ser o mesmo.
+
+  Para executar no ubuntu você pode seguir os seguintes passos:
 
   Pra instalar o gcc:
   sudo apt-get install GCC
@@ -12,13 +14,13 @@
   Pra executar:
   ./main
 
-  Não consegui fazer o compilador compilar certinho no windows, mas você talvez
-  consiga, boa sorte
-
   O programa pode parecer que travou as vezes, principalmente após apertar
-  enter, caso aconteca aperte enter mais uma vez e aguarde
+  enter, isso acontece por causa que o que está escrito na tela só se atualiza
+  a cada 3 segundos e se tiver, caso aconteca aperte enter mais uma vez e
+  aguarde.
 */
 
+// Incluindo as bibliotecas necessarias
 #include <iostream>
 #include <thread>
 #include <stdio.h>
@@ -26,27 +28,49 @@
 
 using namespace std;
 
+// Toda a impressao deve ter uma maquina na qual vai ser impressa e um nome de
+// arquivo
 struct impressao {
   string maquina = "";
   string arquivo = "";
 };
 
 struct impressao filaDeImpressao[limite];
+
+// Diz a quantidade de impressoes na fila. (Se não houver nenhuma topo = -1)
 int topo = -1;
+
+// Ultima mensagem escrita pelo programa, printada junto com o menu
 string ultimaMensagem = "Nenhuma mensagem";
 
+// Selecao atual feita pelo usuario
 char selecao = '0';
 
+// Começa a contar o tempo da primeira impressao
 unsigned long ultimaRemocao =
     std::chrono::duration_cast<std::chrono::milliseconds>
         (std::chrono::system_clock::now().time_since_epoch()).count();
+
+        /*
+          Imprime a lista de impressoes
+        */
+        void printStruct(){
+          cout << endl << "Lista de impressoes" << endl;
+          for (int i = 0; i < topo + 1; i++) {
+            cout << i << " " << filaDeImpressao[i].maquina
+              << " " << filaDeImpressao[i].arquivo << endl;
+          }
+        }
+
 /*
-  Printa o menu
+  Printa o menu.
+  Caso o usuario tenha selecionado algo no menu ele mostra instrucoes
 */
 void printMenu(){
   if (selecao == '1'){
     cout << "Siga as instrucoes:" << endl;
-    cout << "Digite a maquina responsavel pela impressao e aperte enter" << endl;
+    cout << "Digite a maquina responsavel pela impressao e aperte enter"
+      << endl;
     cout << "Depois digite o nome do arquivo e aperte enter" << endl;
     return;
   }
@@ -67,7 +91,7 @@ void printMenu(){
 }
 
 /*
-Insere um trabalho na fila (push)
+  Insere um trabalho na fila (push)
 */
 void inserirTrabalhoImpressao(string maquina, string arquivo) {
   if (topo >= limite) {
@@ -83,16 +107,7 @@ void inserirTrabalhoImpressao(string maquina, string arquivo) {
 }
 
 /*
-  Insere valores padrões na lista antes do programa se iniciar
-*/
-void adicionarListaDefault() {
-  inserirTrabalhoImpressao("HP1", "TRABALHO.DOC");
-  inserirTrabalhoImpressao("HP2", "IMAGEM.JPG");
-  inserirTrabalhoImpressao("HP3", "DOCUMENTO.PDF");
-}
-
-/*
-  Retira o primeiro item da lista (shift)
+Retira o primeiro item da lista (shift)
 */
 struct impressao removerPrimeiroItem() {
   if (topo < 0) {
@@ -126,34 +141,9 @@ struct impressao removerElemento(int pos){
   return temp;
 }
 
-void printStruct(){
-  cout << endl << "Lista de impressoes" << endl;
-  for (int i = 0; i < topo + 1; i++) {
-    cout << i << " " << filaDeImpressao[i].maquina
-      << " " << filaDeImpressao[i].arquivo << endl;
-  }
-}
-
-void listaThread(){
-  while (selecao != '4'){
-    unsigned long agora =
-    std::chrono::duration_cast<std::chrono::milliseconds>
-        (std::chrono::system_clock::now().time_since_epoch()).count();
-    if (agora - ultimaRemocao > 3000) {
-      ultimaRemocao =
-        std::chrono::duration_cast<std::chrono::milliseconds>
-          (std::chrono::system_clock::now().time_since_epoch()).count();
-      if (selecao != '1' && selecao != '2'){
-        cout << "\033[2J\033[1;1H";
-        cout << ultimaMensagem;
-        printStruct();
-        printMenu();
-      }
-      removerPrimeiroItem();
-    }
-  }
-}
-
+/*
+  Insere o trabalho de acordo com a entrada do usuario
+*/
 void inserirTrabalhoUsuario(){
   cout << "\033[2J\033[1;1H";
   cout << ultimaMensagem;
@@ -172,6 +162,9 @@ void inserirTrabalhoUsuario(){
   selecao = '0';
 }
 
+/*
+  Remove trabalho de acordo com a entrada do usuario
+*/
 void removerElementoUsuario(){
   cout << "\033[2J\033[1;1H";
   cout << ultimaMensagem;
@@ -183,6 +176,47 @@ void removerElementoUsuario(){
   selecao = '0';
 }
 
+/*
+  Insere valores padrões na lista antes do programa se iniciar
+*/
+void adicionarListaDefault() {
+  inserirTrabalhoImpressao("HP1", "TRABALHO.DOC");
+  inserirTrabalhoImpressao("HP2", "IMAGEM.JPG");
+  inserirTrabalhoImpressao("HP3", "DOCUMENTO.PDF");
+}
+
+/*
+  O que tira impressoes da lista eh uma
+  thread (http://www.cplusplus.com/reference/thread/thread/) que é executada
+  paralelamente a interacao com o usuario.
+  Como eh executada paralelamente nao ha motivos para que o usuario de inicio
+  a execucao das impressoes.
+  Alem de remover trabalhos a thread tambem eh responsavel em printar a
+  ultimaMensagem, a lista, e o menu.
+*/
+void listaThread(){
+  while (selecao != '4'){
+    unsigned long agora =
+      std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch()).count();
+    if (agora - ultimaRemocao > 3000) {
+      ultimaRemocao =
+        std::chrono::duration_cast<std::chrono::milliseconds>
+          (std::chrono::system_clock::now().time_since_epoch()).count();
+      if (selecao != '1' && selecao != '2'){
+        cout << "\033[2J\033[1;1H";
+        cout << ultimaMensagem;
+        printStruct();
+        printMenu();
+      }
+      removerPrimeiroItem();
+    }
+  }
+}
+
+/*
+  Insere trabalhos padrao, inicia a thread e so eh encerrada se o usuario pedir
+*/
 int main() {
   adicionarListaDefault();
   thread t1(listaThread);
